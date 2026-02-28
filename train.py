@@ -92,12 +92,11 @@ def train(train_loader, valid_loader, model, epochs=1):
 
                 train_losses.append(loss.item())
                 pbar.set_postfix(loss=f"{loss.item():.4f}")
-                break
 
             train_epoch_loss = sum(train_losses)/len(train_losses)
             tqdm.write(
                 f"Epoch {epoch+1}/{epochs} Train Loss: {train_epoch_loss:.4f}")
-            break
+
     save_dir = os.path.join(cfg.eval.model_path, cfg.run_name)
     os.makedirs(save_dir, exist_ok=True)
     checkpoint_path = os.path.join(save_dir, "latest.pth")

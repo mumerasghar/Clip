@@ -78,7 +78,6 @@ def evaluate(val_loader, model):
             pred_labels.extend(predictions.cpu().numpy())
 
             accuracy += torch.eq(predictions, labels).sum().item()
-            break
 
         accuracy = accuracy/len(val_loader.dataset)
         print(f"Average Accuracy: {accuracy}")
