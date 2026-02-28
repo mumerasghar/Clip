@@ -1,12 +1,33 @@
 run_name: ViT-B/16
+log_dir: ./logs
+seed: 42
+num_workers : 2
 
 dataset:
   name: indian_bird_species_image_classification
   root: ./data/Birds_25
-
+  
+model:
+  name : scenario_clip
+  embed_dim : 768
+  # vision
+  image_resolution : 224
+  vision_layers : 6 # number of layers of the vision transformer
+  vision_width : 768 # width of the vision transformer
+  vision_patch_size : 16 # patch size
+  # text
+  context_length : 77 # context length of the CLIP tokenizer
+  vocab_size : 49408 # vocab size of the CLIP tokenizer
+  transformer_layers : 6 # number of layers of the transformer
+  transformer_width : 768 # width of the transformer
+  transformer_heads : 12 # number of heads of the transformer
 
 train:
   batch_size : 32
   shuffle : True
   lr : 5e-4
   epochs : 10
+
+eval:
+  batch_size : 256
+  model_path: ./logs/scenario_clip/latest.pth

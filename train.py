@@ -12,7 +12,6 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from datasets.indian_birds import IndianBirdsDataset
 from tqdm import tqdm
-from models.contrastive_loss import ContrastiveLoss
 
 device = torch.device("cpu")
 
@@ -91,10 +90,12 @@ def train(train_loader, model, epochs=1):
 
                 train_losses.append(loss.item())
                 pbar.set_postfix(loss=f"{loss.item():.4f}")
+                break
 
             train_epoch_loss = sum(train_losses)/len(train_losses)
             tqdm.write(
                 f"Epoch {epoch+1}/{epochs} Train Loss: {train_epoch_loss:.4f}")
+        break
 
     save_dir = os.path.join(cfg.eval.model_path, cfg.run_name)
     os.makedirs(save_dir, exist_ok=True)

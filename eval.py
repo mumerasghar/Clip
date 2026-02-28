@@ -1,5 +1,6 @@
 # Fill this file out
 
+import os
 from torch.fx.experimental.optimization import optimize_for_inference
 import clip
 import argparse
@@ -11,6 +12,7 @@ from torch.utils.data import DataLoader
 from datasets.indian_birds import IndianBirdsDataset
 from tqdm import tqdm
 from sklearn.metrics import confusion_matrix
+from pathlib import Path
 
 device = torch.device("cpu")
 
@@ -41,6 +43,14 @@ def create_val_dataloader(root_dir,
 
 def load_model(model_name="ViT-B/16"):
     model, preprocess = clip.load(model_name, device=device, jit=False)
+
+    save_dir = os.path.join(cfg.eval.model_path, cfg.run_name)
+    checkpoint_path = os.path.join(save_dir, "latest.pth")
+    dir_path = Path(checkpoint_path)
+
+    if dir_path.exists():
+        model.load_state_dict(torch.load(checkpoint_path))
+
     # Convert model to single precision to prevent NaN loss when training with Adam
     # model = model.float()
     return model, preprocess
