@@ -1,0 +1,36 @@
+run_name: scenario_clip
+log_dir: ./logs
+seed: 42
+num_workers : 4
+
+dataset:
+  name : psg
+  root : /home/ssinha/datasets/psg/coco
+  ann_file : ./data/psg_train_val_with_activity.json
+  max_objs : 50
+  pad_value : -100
+
+model:
+  name : scenario_clip
+  embed_dim : 768
+  # vision
+  image_resolution : 224
+  vision_layers : 6 # number of layers of the vision transformer
+  vision_width : 768 # width of the vision transformer
+  vision_patch_size : 16 # patch size
+  # text
+  context_length : 77 # context length of the CLIP tokenizer
+  vocab_size : 49408 # vocab size of the CLIP tokenizer
+  transformer_layers : 6 # number of layers of the transformer
+  transformer_width : 768 # width of the transformer
+  transformer_heads : 12 # number of heads of the transformer
+
+train:
+  batch_size : 128
+  shuffle : True
+  lr : 3e-4
+  epochs : 100
+
+eval:
+  batch_size : 8
+  model_path: ./logs/scenario_clip/latest.pth

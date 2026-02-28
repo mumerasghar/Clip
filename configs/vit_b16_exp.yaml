@@ -1,0 +1,12 @@
+run_name: ViT-B/16
+
+dataset:
+  name: indian_bird_species_image_classification
+  root: /Users/muhammadumer/datasets/Birds_25
+
+
+train:
+  batch_size : 32
+  shuffle : True
+  lr : 5e-4
+  epochs : 1
