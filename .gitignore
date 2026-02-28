@@ -1,3 +1,4 @@
 archive (1).zip
 venv
 data/Birds_25
+*.pth

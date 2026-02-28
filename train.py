@@ -13,6 +13,8 @@ from torch.utils.data import DataLoader
 from datasets.indian_birds import IndianBirdsDataset
 from tqdm import tqdm
 
+from eval import evaluate
+
 device = torch.device("cpu")
 
 if torch.cuda.is_available():
@@ -57,7 +59,7 @@ def load_model(model_name="ViT-B/16"):
     return model, preprocess
 
 
-def train(train_loader, model, epochs=1):
+def train(train_loader, valid_loader, model, epochs=1):
 
     # For mixed precision training (fp16) adam's default epsilon is too small, and
     # quickly gets out of bound for the range of fp16. I could have either usef fp32
@@ -90,16 +92,20 @@ def train(train_loader, model, epochs=1):
 
                 train_losses.append(loss.item())
                 pbar.set_postfix(loss=f"{loss.item():.4f}")
+                break
 
             train_epoch_loss = sum(train_losses)/len(train_losses)
             tqdm.write(
                 f"Epoch {epoch+1}/{epochs} Train Loss: {train_epoch_loss:.4f}")
-
+            break
     save_dir = os.path.join(cfg.eval.model_path, cfg.run_name)
     os.makedirs(save_dir, exist_ok=True)
     checkpoint_path = os.path.join(save_dir, "latest.pth")
     torch.save(model.state_dict(), checkpoint_path)
     tqdm.write(f"Saved checkpoint to {checkpoint_path}")
+
+    # evaluate on validation set
+    evaluate(valid_loader, model)
 
 
 def main():
@@ -117,7 +123,7 @@ def main():
         cfg.train.shuffle,
         cfg.num_workers)
 
-    train(train_loader, model, cfg.train.epochs)
+    train(train_loader, valid_loader, model, cfg.train.epochs)
 
 
 if __name__ == "__main__":

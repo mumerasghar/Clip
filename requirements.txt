@@ -4,3 +4,4 @@ torchvision
 openai-clip
 tqdm
 scikit-learn
+matplotlib

@@ -11,7 +11,8 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from datasets.indian_birds import IndianBirdsDataset
 from tqdm import tqdm
-from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from pathlib import Path
 
 device = torch.device("cpu")
@@ -77,12 +78,22 @@ def evaluate(val_loader, model):
             pred_labels.extend(predictions.cpu().numpy())
 
             accuracy += torch.eq(predictions, labels).sum().item()
+            break
 
         accuracy = accuracy/len(val_loader.dataset)
         print(f"Average Accuracy: {accuracy}")
 
         conf_matrix = confusion_matrix(true_labels, pred_labels)
+
+        class_wise_accuracy = conf_matrix.diagonal()/conf_matrix.sum(axis=1)
+        print(f"Class-wise Accuracy: {class_wise_accuracy}")
+
         print(f"Confusion Matrix: {conf_matrix}")
+        disp = ConfusionMatrixDisplay(
+            confusion_matrix=conf_matrix)
+        disp.plot(cmap=plt.cm.Blues)
+        plt.title("Confusion Matrix")
+        plt.show()
 
 
 def main():
