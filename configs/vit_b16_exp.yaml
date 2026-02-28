@@ -23,7 +23,7 @@ model:
   transformer_heads : 12 # number of heads of the transformer
 
 train:
-  batch_size : 32
+  batch_size : 128
   shuffle : True
   lr : 1e-4
   epochs : 10
