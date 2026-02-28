@@ -10,6 +10,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from datasets.indian_birds import IndianBirdsDataset
 from tqdm import tqdm
+from sklearn.metrics import confusion_matrix
 
 device = torch.device("cpu")
 
@@ -48,6 +49,8 @@ def load_model(model_name="ViT-B/16"):
 def evaluate(val_loader, model):
 
     model.eval()
+    true_labels = []
+    pred_labels = []
     with tqdm(val_loader, desc="Validation") as pbar:
         accuracy = 0
         for images, class_labels in pbar:
@@ -60,10 +63,16 @@ def evaluate(val_loader, model):
             probs = F.softmax(i_embed, dim=-1)
             predictions = torch.argmax(probs, dim=-1)
 
+            true_labels.extend(labels.cpu().numpy())
+            pred_labels.extend(predictions.cpu().numpy())
+
             accuracy += torch.eq(predictions, labels).sum().item()
 
         accuracy = accuracy/len(val_loader.dataset)
-        print(f"Accuracy: {accuracy}")
+        print(f"Average Accuracy: {accuracy}")
+
+        conf_matrix = confusion_matrix(true_labels, pred_labels)
+        print(f"Confusion Matrix: {conf_matrix}")
 
 
 def main():

@@ -3,3 +3,4 @@ torch
 torchvision
 openai-clip
 tqdm
+scikit-learn
