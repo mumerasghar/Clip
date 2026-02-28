@@ -86,7 +86,7 @@ def main():
     valid_loader = create_val_dataloader(
         cfg.dataset.root,
         preprocess,
-        cfg.train.batch_size,
+        cfg.eval.batch_size,
         cfg.train.shuffle,
         cfg.num_workers)
 

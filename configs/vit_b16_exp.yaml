@@ -9,4 +9,4 @@ train:
   batch_size : 32
   shuffle : True
   lr : 5e-4
-  epochs : 1
+  epochs : 10

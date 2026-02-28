@@ -4,6 +4,7 @@
 from torch.fx.experimental.optimization import optimize_for_inference
 import clip
 import argparse
+import os
 from cfg import cfg
 
 import torch
@@ -94,6 +95,12 @@ def train(train_loader, model, epochs=1):
             train_epoch_loss = sum(train_losses)/len(train_losses)
             tqdm.write(
                 f"Epoch {epoch+1}/{epochs} Train Loss: {train_epoch_loss:.4f}")
+
+    save_dir = os.path.join(cfg.eval.model_path, cfg.run_name)
+    os.makedirs(save_dir, exist_ok=True)
+    checkpoint_path = os.path.join(save_dir, "latest.pth")
+    torch.save(model.state_dict(), checkpoint_path)
+    tqdm.write(f"Saved checkpoint to {checkpoint_path}")
 
 
 def main():
